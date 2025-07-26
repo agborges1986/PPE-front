@@ -7,12 +7,12 @@ const CameraHelp = (props) => {
     return (
       <Row>
         <Col md={12}>
-          When prompted, you need to click <i>Allow</i> to use the application
-          with your webcamera.
+          Cuando se le solicite, debe hacer clic en <i>Permitir</i> para usar la aplicación
+          con su cámara web.
           <br />
-          If you don't see the dialog, try{" "}
-          <a href={currentUrl}>opening the application</a> in a new incognito
-          window, or review your webcam settings on your browser.
+          Si no ve el diálogo, intente{" "}
+          <a href={currentUrl}>abrir la aplicación</a> en una nueva ventana de incógnito,
+          o revise la configuración de su cámara web en su navegador.
         </Col>
       </Row>
     );

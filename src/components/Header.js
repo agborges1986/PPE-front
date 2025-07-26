@@ -28,8 +28,8 @@ const Header = ({ readyToStream, signedIn, toggleRekognition }) => {
   return (
     <Navbar bg="dark" expand="lg">
       <Navbar.Brand>
-        <img src={tivitLogo} alt="My Company Logo" className="company-logo" />
-        <span className="header-title"> Demo computer vision</span>
+        <img src={tivitLogo} alt="Logo de la Empresa" className="company-logo" />
+        <span className="header-title"> Demo de visión por computadora</span>
       </Navbar.Brand>
       <Navbar.Toggle />
       {(userEmail || authError) && (
@@ -38,7 +38,7 @@ const Header = ({ readyToStream, signedIn, toggleRekognition }) => {
             {authError && (
               <>
                 <span className="auth-error">
-                  Authentication error: {authError}
+                  Error de autenticación: {authError}
                 </span>
                 <Button variant="link" className="headerLink" onClick={reload}>
                   Reintentar
