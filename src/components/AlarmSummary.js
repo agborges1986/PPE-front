@@ -7,12 +7,9 @@ const AlarmSummary = ({ testResults }) => {
     total + (person.missingPPE ? person.missingPPE.length : 0), 0
   );
 
+  // Don't show anything if everyone has proper PPE
   if (peopleWithAlarms.length === 0) {
-    return (
-      <div className="compliance-status success">
-        ✅ Todas las personas detectadas tienen el EPP adecuado.
-      </div>
-    );
+    return null;
   }
 
   return (
