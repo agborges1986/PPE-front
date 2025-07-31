@@ -13,14 +13,16 @@ import CameraHelp from "./components/CameraHelp";
 import ProtectionSummary from "./components/ProtectionSummary";
 import Header from "./components/Header";
 import SettingsHelp from "./components/SettingsHelp";
+import Navigation from "./components/Navigation";
+import VideoUpload from "./components/VideoUpload";
 
 const App = () => {
-  const [authState, setAuthState] = useState(undefined);
+  const [authState, setAuthState] = useState("signin");
+  const [testResults, setTestResults] = useState([]);
   const [errorDetails, setErrorDetails] = useState(undefined);
   const [readyToStream, setReadyToStream] = useState(false);
-  const [testResults, setTestResults] = useState([]);
   const [webcamCoordinates, setWebcamCoordinates] = useState({});
-
+  const [activeMode, setActiveMode] = useState("live");
   const iterating = useRef(false);
   const webcam = useRef(undefined);
 
@@ -71,48 +73,63 @@ const App = () => {
 
   const signedIn = authState === "signedin";
 
+  const renderLiveCamera = () => (
+    <>
+      <CameraHelp show={!readyToStream} />
+      <Row>
+        <Col md={8} sm={6}>
+          <Webcam
+            audio={false}
+            ref={setupWebcam}
+            screenshotFormat="image/jpeg"
+            videoConstraints={{
+              width: 1280,
+              height: 640,
+              facingMode: "user",
+            }}
+            style={{ width: "100%", marginTop: "10px" }}
+          />
+        </Col>
+        <Col md={4} sm={6}>
+          <Alert
+            variant="danger"
+            style={{
+              display: isUndefined(errorDetails) ? "none" : "block",
+            }}
+          >
+            Ocurrió un error{errorDetails && `: ${errorDetails}`}.{" "}
+            <a href={window.location.href}>Reintentar</a>.
+          </Alert>
+          <ProtectionSummary
+            testResults={testResults}
+            webcamCoordinates={webcamCoordinates}
+          />
+        </Col>
+      </Row>
+    </>
+  );
+
+  const renderVideoUpload = () => (
+    <VideoUpload />
+  );
+
   return (
     <div className="App">
       <Header
         readyToStream={readyToStream}
         signedIn={signedIn}
         toggleRekognition={toggleRekognition}
+        activeMode={activeMode}
       />
       {!window.rekognitionSettings ? (
         <SettingsHelp />
       ) : signedIn ? (
         <>
-          <CameraHelp show={!readyToStream} />
-          <Row>
-            <Col md={8} sm={6}>
-              <Webcam
-                audio={false}
-                ref={setupWebcam}
-                screenshotFormat="image/jpeg"
-                videoConstraints={{
-                  width: 1280,
-                  height: 640,
-                  facingMode: "user",
-                }}
-                style={{ width: "100%", marginTop: "10px" }}
-              />
-            </Col>
-            <Col md={4} sm={6}>
-              <Alert
-                variant="danger"
-                style={{
-                  display: isUndefined(errorDetails) ? "none" : "block",
-                }}
-              >
-                An error happened{errorDetails && `: ${errorDetails}`}.{" "}
-                <a href={window.location.href}>Retry</a>.
-              </Alert>
-              <ProtectionSummary
-                testResults={testResults}
-                webcamCoordinates={webcamCoordinates}
-              />
-            </Col>
-          </Row>
+          <Navigation 
+            activeMode={activeMode} 
+            onModeChange={setActiveMode} 
+          />
+          {activeMode === "live" ? renderLiveCamera() : renderVideoUpload()}
         </>
       ) : (
         <div className="amplify-auth-container">

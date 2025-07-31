@@ -9,7 +9,7 @@ import RekognitionButton from "./RekognitionButton";
 
 import "./Header.css";
 
-const Header = ({ readyToStream, signedIn, toggleRekognition }) => {
+const Header = ({ readyToStream, signedIn, toggleRekognition, activeMode }) => {
   const [authError, setAuthError] = useState(null);
   const [userEmail, setUserEmail] = useState(undefined);
 
@@ -47,10 +47,12 @@ const Header = ({ readyToStream, signedIn, toggleRekognition }) => {
             )}
             {userEmail && (
               <>
-                <RekognitionButton
-                  onClick={toggleRekognition}
-                  enabled={readyToStream}
-                />
+                {activeMode === "live" && (
+                  <RekognitionButton
+                    onClick={toggleRekognition}
+                    enabled={readyToStream}
+                  />
+                )}
 
                 <Button onClick={signOut} variant="warning" size="sm">
                   Cerrar sesión
