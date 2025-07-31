@@ -9,7 +9,7 @@ import RekognitionButton from "./RekognitionButton";
 
 import "./Header.css";
 
-const Header = ({ readyToStream, signedIn, toggleRekognition }) => {
+const Header = ({ readyToStream, signedIn, toggleRekognition, activeMode }) => {
   const [authError, setAuthError] = useState(null);
   const [userEmail, setUserEmail] = useState(undefined);
 
@@ -28,8 +28,8 @@ const Header = ({ readyToStream, signedIn, toggleRekognition }) => {
   return (
     <Navbar bg="dark" expand="lg">
       <Navbar.Brand>
-        <img src={tivitLogo} alt="My Company Logo" className="company-logo" />
-        <span className="header-title"> Demo computer vision</span>
+        <img src={tivitLogo} alt="Logo de la Empresa" className="company-logo" />
+        <span className="header-title"> Demo de visión por computadora</span>
       </Navbar.Brand>
       <Navbar.Toggle />
       {(userEmail || authError) && (
@@ -38,7 +38,7 @@ const Header = ({ readyToStream, signedIn, toggleRekognition }) => {
             {authError && (
               <>
                 <span className="auth-error">
-                  Authentication error: {authError}
+                  Error de autenticación: {authError}
                 </span>
                 <Button variant="link" className="headerLink" onClick={reload}>
                   Reintentar
@@ -47,10 +47,12 @@ const Header = ({ readyToStream, signedIn, toggleRekognition }) => {
             )}
             {userEmail && (
               <>
-                <RekognitionButton
-                  onClick={toggleRekognition}
-                  enabled={readyToStream}
-                />
+                {activeMode === "live" && (
+                  <RekognitionButton
+                    onClick={toggleRekognition}
+                    enabled={readyToStream}
+                  />
+                )}
 
                 <Button onClick={signOut} variant="warning" size="sm">
                   Cerrar sesión

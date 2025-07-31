@@ -9,10 +9,12 @@ Array [
       "Top": 0.20151133835315704,
       "Width": 0.7751060724258423,
     },
+    "hasAlarm": false,
     "id": 0,
+    "missingPPE": Array [],
     "results": Array [
       Object {
-        "bodyPart": "face",
+        "bodyPart": "cara",
         "boundingBox": Object {
           "Height": 0.3095385730266571,
           "Left": 0.2645637094974518,
@@ -22,10 +24,10 @@ Array [
         "confidence": 99.9,
         "coversBodyPart": true,
         "coversBodyPartConfidence": 79.8,
-        "type": "Mask",
+        "type": "Mascarilla",
       },
       Object {
-        "bodyPart": "face",
+        "bodyPart": "cara",
         "boundingBox": Object {
           "Height": 0.3095385730266571,
           "Left": 0.2645637094974518,
@@ -38,7 +40,7 @@ Array [
         "type": "Foo",
       },
       Object {
-        "bodyPart": "head",
+        "bodyPart": "cabeza",
         "boundingBox": Object {
           "Height": 0.37994688749313354,
           "Left": 0.342035174369812,
@@ -48,10 +50,10 @@ Array [
         "confidence": 99.9,
         "coversBodyPart": true,
         "coversBodyPartConfidence": 84.2,
-        "type": "Helmet",
+        "type": "Casco",
       },
       Object {
-        "bodyPart": "left hand",
+        "bodyPart": "mano izquierda",
         "boundingBox": Object {
           "Height": 0.33101364970207214,
           "Left": 0.5892353653907776,
@@ -61,10 +63,10 @@ Array [
         "confidence": 99.7,
         "coversBodyPart": true,
         "coversBodyPartConfidence": 100,
-        "type": "Glove",
+        "type": "Guante",
       },
       Object {
-        "bodyPart": "right hand",
+        "bodyPart": "mano derecha",
         "boundingBox": Object {
           "Height": 0.32489436864852905,
           "Left": 0.20085042715072632,
@@ -74,7 +76,7 @@ Array [
         "confidence": 99.8,
         "coversBodyPart": true,
         "coversBodyPartConfidence": 100,
-        "type": "Glove",
+        "type": "Guante",
       },
     ],
   },

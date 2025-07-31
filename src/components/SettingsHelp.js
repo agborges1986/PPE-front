@@ -3,14 +3,14 @@ import { Alert } from "react-bootstrap";
 
 const SettingsHelp = () => (
   <Alert variant="danger">
-    There is an issue with your settings configuration. If you are running the
-    front-end code from your local machine, you may need to follow{" "}
+    Hay un problema con la configuración de su configuración. Si está ejecutando el
+    código front-end desde su máquina local, es posible que necesite seguir{" "}
     <a
       href="https://github.com/aws-samples/amazon-rekognition-ppe/blob/master/CONTRIBUTING.md#working-with-the-web-ui"
       rel="noopener noreferrer"
       target="_blank"
     >
-      this guide
+      esta guía
     </a>
     .
   </Alert>
