@@ -13,10 +13,7 @@ import CameraHelp from "./components/CameraHelp";
 import ProtectionSummary from "./components/ProtectionSummary";
 import Header from "./components/Header";
 import SettingsHelp from "./components/SettingsHelp";
-<<<<<<< HEAD
-=======
 import Navigation from "./components/Navigation";
->>>>>>> adapt2
 import VideoUpload from "./components/VideoUpload";
 
 const App = () => {
@@ -25,12 +22,7 @@ const App = () => {
   const [errorDetails, setErrorDetails] = useState(undefined);
   const [readyToStream, setReadyToStream] = useState(false);
   const [webcamCoordinates, setWebcamCoordinates] = useState({});
-<<<<<<< HEAD
-  const [activeMode, setActiveMode] = useState("camera"); // "camera" or "video"
-
-=======
   const [activeMode, setActiveMode] = useState("live");
->>>>>>> adapt2
   const iterating = useRef(false);
   const webcam = useRef(undefined);
 
@@ -81,11 +73,7 @@ const App = () => {
 
   const signedIn = authState === "signedin";
 
-<<<<<<< HEAD
-  const renderCameraMode = () => (
-=======
   const renderLiveCamera = () => (
->>>>>>> adapt2
     <>
       <CameraHelp show={!readyToStream} />
       <Row>
@@ -109,13 +97,8 @@ const App = () => {
               display: isUndefined(errorDetails) ? "none" : "block",
             }}
           >
-<<<<<<< HEAD
-            An error happened{errorDetails && `: ${errorDetails}`}.{" "}
-            <a href={window.location.href}>Retry</a>.
-=======
             Ocurrió un error{errorDetails && `: ${errorDetails}`}.{" "}
             <a href={window.location.href}>Reintentar</a>.
->>>>>>> adapt2
           </Alert>
           <ProtectionSummary
             testResults={testResults}
@@ -126,15 +109,8 @@ const App = () => {
     </>
   );
 
-<<<<<<< HEAD
-  const renderVideoMode = () => (
-    <div className="container-fluid">
-      <VideoUpload />
-    </div>
-=======
   const renderVideoUpload = () => (
     <VideoUpload />
->>>>>>> adapt2
   );
 
   return (
@@ -149,36 +125,11 @@ const App = () => {
         <SettingsHelp />
       ) : signedIn ? (
         <>
-<<<<<<< HEAD
-          <Navbar bg="light" expand="lg" className="mb-3">
-            <Navbar.Brand>PPE Detection</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <Nav.Link 
-                  active={activeMode === "camera"}
-                  onClick={() => setActiveMode("camera")}
-                >
-                  📹 Live Camera
-                </Nav.Link>
-                <Nav.Link 
-                  active={activeMode === "video"}
-                  onClick={() => setActiveMode("video")}
-                >
-                  🎥 Video Upload
-                </Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-          
-          {activeMode === "camera" ? renderCameraMode() : renderVideoMode()}
-=======
           <Navigation 
             activeMode={activeMode} 
             onModeChange={setActiveMode} 
           />
           {activeMode === "live" ? renderLiveCamera() : renderVideoUpload()}
->>>>>>> adapt2
         </>
       ) : (
         <div className="amplify-auth-container">

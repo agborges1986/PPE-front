@@ -354,7 +354,6 @@ svg {
   margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
 /* Video Upload Styles */
 .video-upload-container {
   max-width: 1200px;
@@ -412,7 +411,8 @@ svg {
   .video-container video {
     max-width: 100%;
   }
-=======
+}
+
 /* PPE Alarm Styles */
 .ppe-alarm {
   animation: pulse 2s infinite;
@@ -468,6 +468,5 @@ svg {
   color: #721c24;
   border: 1px solid #f5c6cb;
   animation: pulse 2s infinite;
->>>>>>> adapt2
 }
 
