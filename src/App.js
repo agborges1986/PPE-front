@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import { AmplifyAuthenticator, AmplifySignIn } from "@aws-amplify/ui-react/legacy";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Webcam from "react-webcam";
-import { Alert, Col, Row } from "react-bootstrap";
+import { Alert, Col, Row, Nav, Navbar } from "react-bootstrap";
 
 import gateway from "./utils/gateway";
 import { ppeMapper } from "./utils/ppe";
@@ -13,6 +13,7 @@ import CameraHelp from "./components/CameraHelp";
 import ProtectionSummary from "./components/ProtectionSummary";
 import Header from "./components/Header";
 import SettingsHelp from "./components/SettingsHelp";
+import VideoUpload from "./components/VideoUpload";
 
 const App = () => {
   const [authState, setAuthState] = useState(undefined);
@@ -20,6 +21,7 @@ const App = () => {
   const [readyToStream, setReadyToStream] = useState(false);
   const [testResults, setTestResults] = useState([]);
   const [webcamCoordinates, setWebcamCoordinates] = useState({});
+  const [activeMode, setActiveMode] = useState("camera"); // "camera" or "video"
 
   const iterating = useRef(false);
   const webcam = useRef(undefined);
@@ -71,6 +73,48 @@ const App = () => {
 
   const signedIn = authState === "signedin";
 
+  const renderCameraMode = () => (
+    <>
+      <CameraHelp show={!readyToStream} />
+      <Row>
+        <Col md={8} sm={6}>
+          <Webcam
+            audio={false}
+            ref={setupWebcam}
+            screenshotFormat="image/jpeg"
+            videoConstraints={{
+              width: 1280,
+              height: 640,
+              facingMode: "user",
+            }}
+            style={{ width: "100%", marginTop: "10px" }}
+          />
+        </Col>
+        <Col md={4} sm={6}>
+          <Alert
+            variant="danger"
+            style={{
+              display: isUndefined(errorDetails) ? "none" : "block",
+            }}
+          >
+            An error happened{errorDetails && `: ${errorDetails}`}.{" "}
+            <a href={window.location.href}>Retry</a>.
+          </Alert>
+          <ProtectionSummary
+            testResults={testResults}
+            webcamCoordinates={webcamCoordinates}
+          />
+        </Col>
+      </Row>
+    </>
+  );
+
+  const renderVideoMode = () => (
+    <div className="container-fluid">
+      <VideoUpload />
+    </div>
+  );
+
   return (
     <div className="App">
       <Header
@@ -82,37 +126,28 @@ const App = () => {
         <SettingsHelp />
       ) : signedIn ? (
         <>
-          <CameraHelp show={!readyToStream} />
-          <Row>
-            <Col md={8} sm={6}>
-              <Webcam
-                audio={false}
-                ref={setupWebcam}
-                screenshotFormat="image/jpeg"
-                videoConstraints={{
-                  width: 1280,
-                  height: 640,
-                  facingMode: "user",
-                }}
-                style={{ width: "100%", marginTop: "10px" }}
-              />
-            </Col>
-            <Col md={4} sm={6}>
-              <Alert
-                variant="danger"
-                style={{
-                  display: isUndefined(errorDetails) ? "none" : "block",
-                }}
-              >
-                An error happened{errorDetails && `: ${errorDetails}`}.{" "}
-                <a href={window.location.href}>Retry</a>.
-              </Alert>
-              <ProtectionSummary
-                testResults={testResults}
-                webcamCoordinates={webcamCoordinates}
-              />
-            </Col>
-          </Row>
+          <Navbar bg="light" expand="lg" className="mb-3">
+            <Navbar.Brand>PPE Detection</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="mr-auto">
+                <Nav.Link 
+                  active={activeMode === "camera"}
+                  onClick={() => setActiveMode("camera")}
+                >
+                  📹 Live Camera
+                </Nav.Link>
+                <Nav.Link 
+                  active={activeMode === "video"}
+                  onClick={() => setActiveMode("video")}
+                >
+                  🎥 Video Upload
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          
+          {activeMode === "camera" ? renderCameraMode() : renderVideoMode()}
         </>
       ) : (
         <div className="amplify-auth-container">

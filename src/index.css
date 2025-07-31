@@ -354,3 +354,62 @@ svg {
   margin-bottom: 10px;
 }
 
+/* Video Upload Styles */
+.video-upload-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.video-container {
+  margin-top: 20px;
+}
+
+.current-time-display {
+  text-align: center;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.analysis-results {
+  margin-top: 30px;
+}
+
+.current-frame-results {
+  margin-bottom: 20px;
+}
+
+.current-alerts {
+  margin-bottom: 20px;
+}
+
+.alerts-timeline {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.alerts-timeline .list-group-item {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.alerts-timeline .list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+.people-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .video-upload-container {
+    padding: 10px;
+  }
+  
+  .video-container video {
+    max-width: 100%;
+  }
+}
+
