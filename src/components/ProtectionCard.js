@@ -40,16 +40,16 @@ const ProtectionCard = ({ person, webcamCoordinates }) => {
   }
 
   return (
-    <Card style={{ marginTop: "20px", textAlign: "left" }}>
+  <Card style={{ marginTop: "20px", textAlign: "left" }}>
       <Card.Header>
         <span>{`Persona #${person.id}`}</span>
       </Card.Header>
-      <BoundingBox
+    <BoundingBox
         label={`Persona #${person.id}`}
-        coordinates={person.boundingBox}
-        webcamCoordinates={webcamCoordinates}
-      />
-      <Card.Body>
+      coordinates={person.boundingBox}
+      webcamCoordinates={webcamCoordinates}
+    />
+    <Card.Body>
         <div style={{ marginTop: "15px" }}>
           <strong>Estado del EPP:</strong>
           <div style={{ marginTop: "10px" }}>
@@ -104,19 +104,19 @@ const ProtectionCard = ({ person, webcamCoordinates }) => {
         </div>
 
         {/* Show detected equipment with bounding boxes */}
-        {person.results.map((r, index) => (
+      {person.results.map((r, index) => (
           <div key={index} style={{ marginTop: "10px" }}>
-            <BoundingBox
-              label={r.type}
-              coordinates={r.boundingBox}
-              webcamCoordinates={webcamCoordinates}
-              color="#28a745"
-            />
+          <BoundingBox
+            label={r.type}
+            coordinates={r.boundingBox}
+            webcamCoordinates={webcamCoordinates}
+            color="#28a745"
+          />
           </div>
-        ))}
-      </Card.Body>
-    </Card>
-  );
+      ))}
+    </Card.Body>
+  </Card>
+);
 };
 
 export default ProtectionCard;

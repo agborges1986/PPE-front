@@ -48,10 +48,10 @@ const Header = ({ readyToStream, signedIn, toggleRekognition, activeMode }) => {
             {userEmail && (
               <>
                 {activeMode === "live" && (
-                  <RekognitionButton
-                    onClick={toggleRekognition}
-                    enabled={readyToStream}
-                  />
+                <RekognitionButton
+                  onClick={toggleRekognition}
+                  enabled={readyToStream}
+                />
                 )}
 
                 <Button onClick={signOut} variant="warning" size="sm">
