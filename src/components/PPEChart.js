@@ -175,8 +175,8 @@ const PPEChart = ({ analysisResults, currentTime }) => {
         </small>
       </Card.Header>
       <Card.Body>
-        <div style={{ overflowX: "auto" }}>
-          <Table striped bordered hover size="sm">
+        <div style={{ overflowX: "auto", fontSize: "0.7em" }}>
+          <Table striped bordered hover size="sm" style={{ fontSize: "0.8em" }}>
             <thead>
               <tr>
                 <th>Persona</th>
@@ -198,11 +198,11 @@ const PPEChart = ({ analysisResults, currentTime }) => {
                     return (
                       <td key={ppeType} style={{ textAlign: "center" }}>
                         {hasEquipment ? (
-                          <span style={{ color: "#28a745", fontSize: "1.2em" }}>
+                          <span style={{ color: "#28a745", fontSize: "0.9em" }}>
                             ✅
                           </span>
                         ) : (
-                          <span style={{ color: "#dc3545", fontSize: "1.2em" }}>
+                          <span style={{ color: "#dc3545", fontSize: "0.9em" }}>
                             ❌
                           </span>
                         )}

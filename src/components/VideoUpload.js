@@ -418,47 +418,6 @@ const VideoUpload = () => {
       {/* Video and Analysis Layout */}
       {videoFile && (
         <Row>
-          <Col md={8} sm={6}>
-            {/* Video Player with Bounding Boxes */}
-            <Card>
-              <Card.Body>
-                <div style={{ position: "relative", display: "inline-block" }}>
-                  <video
-                    ref={videoRef}
-                    controls
-                    style={{ width: "100%", maxHeight: "400px" }}
-                    onTimeUpdate={handleVideoTimeUpdate}
-                  >
-                    <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
-                  </video>
-                  
-                  {/* Bounding Boxes Overlay */}
-                  {analysisResults.length > 0 && (
-                    <div style={{ 
-                      position: "absolute", 
-                      top: 0, 
-                      left: 0, 
-                      width: "100%", 
-                      height: "100%",
-                      pointerEvents: "none"
-                    }}>
-                      {getCurrentFrameResults().Persons.map((person, index) => {
-                        const mappedPerson = ppeMapper(person);
-                        return (
-                          <VideoBoundingBox
-                            key={index}
-                            person={person}
-                            webcamCoordinates={webcamCoordinates}
-                            isMissing={mappedPerson.hasAlarm}
-                          />
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
           <Col md={4} sm={6}>
             {/* PPE Chart */}
             {analysisResults.length > 0 ? (
@@ -489,6 +448,46 @@ const VideoUpload = () => {
                 </Card.Body>
               </Card>
             )}
+          </Col>
+          <Col md={8} sm={6}>
+            {/* Video Player with Bounding Boxes */}
+            <Card>
+              <Card.Body>
+                <div style={{ position: "relative", display: "inline-block" }}>
+                  <video
+                    ref={videoRef}
+                    controls
+                    style={{ width: "100%", maxHeight: "400px" }}
+                    onTimeUpdate={handleVideoTimeUpdate}
+                  >
+                    <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
+                  </video>
+                  {/* Bounding Boxes Overlay */}
+                  {analysisResults.length > 0 && (
+                    <div style={{ 
+                      position: "absolute", 
+                      top: 0, 
+                      left: 0, 
+                      width: "100%", 
+                      height: "100%",
+                      pointerEvents: "none"
+                    }}>
+                      {getCurrentFrameResults().Persons.map((person, index) => {
+                        const mappedPerson = ppeMapper(person);
+                        return (
+                          <VideoBoundingBox
+                            key={index}
+                            person={person}
+                            webcamCoordinates={webcamCoordinates}
+                            isMissing={mappedPerson.hasAlarm}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
           </Col>
         </Row>
       )}

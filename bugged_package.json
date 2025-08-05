@@ -15,7 +15,7 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "cross-env HTTPS=true && react-scripts start",
+    "start": "export HTTPS=true && react-scripts start",
     "build": "react-scripts build",
     "test": "CI=true SKIP_PREFLIGHT_CHECK=true react-scripts test",
     "eject": "react-scripts eject"
@@ -28,8 +28,5 @@
     "not dead",
     "not ie > 0",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "cross-env": "^10.0.0"
-  }
+  ]
 }
