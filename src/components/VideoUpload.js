@@ -16,7 +16,7 @@ const VideoUpload = () => {
   const fileInputRef = useRef(null);
 
   // Configuration for frame extraction
-  const FRAME_INTERVAL = 1; // Check every 1 second
+  const FRAME_INTERVAL = 1;
 
   // Extract frames from video at regular intervals
   const extractFrames = async (videoBlob) => {
@@ -79,7 +79,7 @@ const VideoUpload = () => {
                     }
                   }
                   resolveFrame(frame);
-                }, 'image/jpeg', 0.7); // Reduced quality to 0.7 for better performance
+                }, 'image/jpeg', 0.85); // Reduced quality to 0.7 for better performance
               };
             };
           });
@@ -147,6 +147,9 @@ const VideoUpload = () => {
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('video/')) {
+      // Initialize chart variables
+      setAnalysisResults([]); // Clear previous chart data
+      setCurrentTime(0);      // Reset chart/video time
       // Check file size and warn for large files
       const fileSizeMB = file.size / (1024 * 1024);
       if (fileSizeMB > 100) {

@@ -77,6 +77,8 @@ export const getMissingPPE = (person) => {
   return missingPPE;
 };
 
+const EQUIPMENT_CONFIDENCE_THRESHOLD = 95; // Change this value to adjust threshold
+
 export const ppeMapper = (person) => {
   const bodyParts = (person.BodyParts || []).filter(
     (x) => x.EquipmentDetections && x.EquipmentDetections.length > 0
@@ -84,20 +86,28 @@ export const ppeMapper = (person) => {
 
   const results = bodyParts
     .map((p) =>
-      p.EquipmentDetections.map((eq) => ({
-        bodyPart: translateBodyPart(formatText(p.Name)),
-        confidence: percentageToString(p.Confidence),
-        type: translateEquipmentType(eq.Type),
-        coversBodyPart: eq.CoversBodyPart.Value,
-        coversBodyPartConfidence: percentageToString(
-          eq.CoversBodyPart.Confidence
-        ),
-        boundingBox: eq.BoundingBox,
-      }))
+      p.EquipmentDetections
+        .filter(eq => eq.Confidence >= EQUIPMENT_CONFIDENCE_THRESHOLD)
+        .map((eq) => ({
+          bodyPart: translateBodyPart(formatText(p.Name)),
+          confidence: percentageToString(p.Confidence),
+          type: translateEquipmentType(eq.Type),
+          coversBodyPart: eq.CoversBodyPart.Value,
+          coversBodyPartConfidence: percentageToString(
+            eq.CoversBodyPart.Confidence
+          ),
+          boundingBox: eq.BoundingBox,
+        }))
     )
     .flat();
 
-  const missingPPE = getMissingPPE(person);
+  const missingPPE = getMissingPPE({
+    ...person,
+    BodyParts: bodyParts.map(bp => ({
+      ...bp,
+      EquipmentDetections: bp.EquipmentDetections.filter(eq => eq.Confidence >= EQUIPMENT_CONFIDENCE_THRESHOLD)
+    }))
+  });
 
   return {
     id: person.Id,

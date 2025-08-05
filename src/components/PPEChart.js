@@ -4,8 +4,8 @@ import { Card, Table } from "react-bootstrap";
 const PPEChart = ({ analysisResults, currentTime }) => {
   // Get current 5-second window results
   const getCurrentWindowResults = () => {
-    const windowStart = Math.floor(currentTime / 5) * 5; // 5-second windows
-    const windowEnd = windowStart + 5;
+    const windowStart = Math.floor(currentTime / 3) * 3; // 3-second windows
+    const windowEnd = windowStart + 3;
     
     // Get all results within the current 5-second window
     const windowResults = analysisResults.filter(result => 
@@ -28,18 +28,13 @@ const PPEChart = ({ analysisResults, currentTime }) => {
           personData[personId] = { bodyParts: {} };
         }
         personCounts[personId]++;
-        
-        // Track PPE detection for this person
+        // Track PPE detection for this person (union of all frames)
         person.BodyParts.forEach(bodyPart => {
           if (!personData[personId].bodyParts[bodyPart.Name]) {
-            personData[personId].bodyParts[bodyPart.Name] = { equipmentCounts: {} };
+            personData[personId].bodyParts[bodyPart.Name] = new Set();
           }
-          
           bodyPart.EquipmentDetections.forEach(equipment => {
-            if (!personData[personId].bodyParts[bodyPart.Name].equipmentCounts[equipment.Type]) {
-              personData[personId].bodyParts[bodyPart.Name].equipmentCounts[equipment.Type] = 0;
-            }
-            personData[personId].bodyParts[bodyPart.Name].equipmentCounts[equipment.Type]++;
+            personData[personId].bodyParts[bodyPart.Name].add(equipment.Type);
           });
         });
       });
@@ -48,18 +43,16 @@ const PPEChart = ({ analysisResults, currentTime }) => {
     // Only include people who appear in more than half the frames
     const minFrames = Math.ceil(windowResults.length / 2);
     const reliablePersons = Object.entries(personCounts)
-      .filter(([personId, count]) => count >= minFrames)
+      .filter(([personId, count]) => count > minFrames)
       .map(([personId, count]) => {
         const person = {
           Id: personId,
-          BodyParts: Object.entries(personData[personId].bodyParts).map(([bodyPartName, data]) => ({
+          BodyParts: Object.entries(personData[personId].bodyParts).map(([bodyPartName, equipmentSet]) => ({
             Name: bodyPartName,
-            EquipmentDetections: Object.entries(data.equipmentCounts)
-              .filter(([equipmentType, equipmentCount]) => equipmentCount >= minFrames)
-              .map(([equipmentType, equipmentCount]) => ({
-                Type: equipmentType,
-                Confidence: 100 // Since we're only including reliable detections
-              }))
+            EquipmentDetections: Array.from(equipmentSet).map(equipmentType => ({
+              Type: equipmentType,
+              Confidence: 100 // Mark as present if detected in any frame
+            }))
           }))
         };
         return person;
@@ -140,8 +133,8 @@ const PPEChart = ({ analysisResults, currentTime }) => {
   const allPPETypes = getAllPPETypes();
 
   // Debug logging for current results
-  const windowStart = Math.floor(currentTime / 5) * 5;
-  console.log('Current 5-second window:', windowStart, 'to', windowStart + 5);
+  const windowStart = Math.floor(currentTime / 3) * 3;
+  console.log('Current 5-second window:', windowStart, 'to', windowStart + 3);
   console.log('Current results:', currentResults);
   console.log('All PPE types:', allPPETypes);
   console.log('Number of persons:', currentResults.Persons.length);
@@ -171,7 +164,7 @@ const PPEChart = ({ analysisResults, currentTime }) => {
         </span>
         <br />
         <small style={{ color: "#6c757d" }}>
-          Ventana de 5s: {windowStart}s - {windowStart + 5}s
+          Ventana de 3s: {windowStart}s - {windowStart + 3}s
         </small>
       </Card.Header>
       <Card.Body>
