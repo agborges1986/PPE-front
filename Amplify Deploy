@@ -1,0 +1,102 @@
+Of course\! Here’s how you adapt those instructions for an application deployed with AWS Amplify.
+
+The main difference is that with Amplify, you don't manually copy files into the `build` folder. Instead, you automate this step by editing Amplify's build settings so it fetches the `settings.js` file for you during its deployment pipeline.
+
+Here is the step-by-step guide to make it work.
+
+-----
+
+### The Overall Strategy 🗺️
+
+1.  **Deploy Backend (CloudFormation):** This step remains the same. You need to create the backend resources first to generate your unique `settings.js` file.
+2.  **Configure Amplify Frontend:** Instead of building your app locally and copying the file, you will configure your Amplify build process to:
+      * Know the location of your S3 bucket (using an Environment Variable).
+      * Run a command to download `settings.js` from that S3 bucket.
+      * Place it in the correct folder (`public`) *before* the `npm run build` command runs.
+      * Proceed with the normal build and deployment.
+
+-----
+
+### Step-by-Step Guide ✅
+
+#### 1\. Deploy the CloudFormation Stack (Same as your instructions)
+
+Follow **Step 1** from your guide exactly. Launch the stack in your desired AWS region and wait for it to reach `CREATE_COMPLETE`.
+
+After it's done, follow **Step 2** of your guide to find the S3 bucket name where `settings.js` is stored.
+
+**➡️ Your action:**
+
+  * Deploy the CloudFormation stack.
+  * Go to the CloudFormation console -\> **Resources** tab.
+  * Find the S3 bucket (`AWS::S3::Bucket`).
+  * **Copy the bucket name**. It will look something like `ppedemo-stack-webappbucket-xxxxxxxxx`.
+
+You do **not** need to download the file manually. You just need the bucket name.
+
+#### 2\. Configure Your Amplify App
+
+Now, go to your application in the AWS Amplify console.
+
+##### A. Add an Environment Variable
+
+Amplify needs to know which S3 bucket to pull the configuration from. You'll provide this as an environment variable.
+
+1.  In your Amplify app, go to **Build settings** from the side menu.
+2.  Scroll down to the **Environment variables** section and click **Edit**.
+3.  Add a new variable:
+      * **Variable:** `S3_CONFIG_BUCKET`
+      * **Value:** Paste the S3 bucket name you copied in the previous step.
+4.  Click **Save**.
+
+##### B. Edit the Build Settings (`amplify.yml`)
+
+This is the most important step. You'll add a command to the build process to download the file.
+
+1.  Still in **Build settings**, scroll up to the **Build and test settings** section and click **Edit**.
+2.  Select the **Amplify YAML editor**.
+3.  Replace the contents with the following code. This script tells Amplify to download the file during the `preBuild` phase.
+
+<!-- end list -->
+
+```yaml
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # This command downloads settings.js from your S3 bucket
+        # into the 'public' folder.
+        - aws s3 cp s3://${S3_CONFIG_BUCKET}/settings.js public/settings.js
+    build:
+      commands:
+        - npm ci
+        - npm run build
+  artifacts:
+    baseDirectory: build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+```
+
+**Why copy to the `public` folder?**
+For React apps created with Create React App, any file in the `public` folder is automatically copied into the final `build` folder when you run `npm run build`. This is the perfect way to inject the file before your app is bundled for deployment.
+
+4.  Click **Save**.
+
+#### 3\. Deploy the Frontend 🚀
+
+Now that everything is configured, you just need to trigger a new build in Amplify. The easiest way to do this is by pushing a small change to your connected Git repository.
+
+`git commit --allow-empty -m "Trigger Amplify build with new settings" && git push`
+
+Amplify will detect the push, start a new build, and automatically:
+
+1.  Read the `S3_CONFIG_BUCKET` environment variable.
+2.  Run the `aws s3 cp` command to download your `settings.js`.
+3.  Run `npm run build`, which will include the newly downloaded `settings.js`.
+4.  Deploy the contents of the `build` folder.
+
+Your application is now live and connected to its backend\!
